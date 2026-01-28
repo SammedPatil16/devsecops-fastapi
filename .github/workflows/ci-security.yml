@@ -10,10 +10,6 @@ jobs:
   security:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: devsecops-fastapi
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,6 +43,5 @@ jobs:
         uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: fs
-          scan-ref: devsecops-fastapi
           severity: CRITICAL,HIGH
           exit-code: 1
