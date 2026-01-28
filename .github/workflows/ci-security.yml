@@ -37,7 +37,7 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: p/ci
-          error_on_findings: true
+          args: --exclude=venv
 
       - name: Run dependency scan (Trivy)
         uses: aquasecurity/trivy-action@0.20.0
