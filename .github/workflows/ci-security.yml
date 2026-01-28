@@ -10,37 +10,43 @@ jobs:
   security:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: devsecops-fastapi
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
 
-    - name: Run unit tests
-      run: pytest
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run secrets scan (Gitleaks)
-      uses: gitleaks/gitleaks-action@v2
-      with:
-        fail: true
+      - name: Run unit tests
+        run: pytest
 
-    - name: Run SAST (Semgrep)
-      uses: returntocorp/semgrep-action@v1
-      with:
-        config: p/ci
-        error_on_findings: true
+      - name: Run secrets scan (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          fail: true
 
-    - name: Run dependency scan (Trivy)
-      uses: aquasecurity/trivy-action@0.20.0
-      with:
-        scan-type: fs
-        severity: CRITICAL,HIGH
-        exit-code: 1
+      - name: Run SAST (Semgrep)
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/ci
+          error_on_findings: true
+
+      - name: Run dependency scan (Trivy)
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: fs
+          scan-ref: devsecops-fastapi
+          severity: CRITICAL,HIGH
+          exit-code: 1
